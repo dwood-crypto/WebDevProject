@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Word Guessing Game</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f4f8;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .game-box {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 150px;
+            text-transform: uppercase;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .guess-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .letter {
+            width: 40px;
+            height: 40px;
+            margin: 3px;
+            line-height: 40px;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .correct {
+            background-color: #6aaa64; /* green */
+        }
+
+        .present {
+            background-color: #c9b458; /* yellow */
+        }
+
+        .absent {
+            background-color: #787c7e; /* gray */
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .button-row {
+    margin-top: 10px;
+        }
+
+        .hint-button {
+        margin-top: 15px;
+        background-color: #e0e0e0;
+        color: #333;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        }
+
+.hint-button:hover {
+    background-color: #d0d0d0;
+}
+
+ </style>
+</head>
+<body>
+
+    <h1>Word Guessing Game</h1>
+    <p>Guess the 5-letter word (6 tries)</p>
+
+    <div class="game-box">
+        <input type="text" id="guessInput" maxlength="5">
+
+    <div class="button-row">
+        <button onclick="submitGuess()">Guess</button>
+        <button onclick="resetGame()">Play Again</button>
+    </div>
+
+<button class="hint-button" onclick="showHint()">Need a Hint?</button>
+
+
+        <div id="guesses"></div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        // WORD LIST
+        const words = ["PLANT", "CHAIR", "APPLE", "STONE", "BRAVE", "BEACH", "BAKER", "CRAFT", "CROWD", "ENTRY", "FAITH", "ELITE", "MAGIC"];
+        const secretWord = words[Math.floor(Math.random() * words.length)];
+        let attempts = 0;
+        const maxAttempts = 6;
+
+        function submitGuess() {
+            const input = document.getElementById("guessInput");
+            const guess = input.value.toUpperCase();
+
+            if (guess.length !== 5) {
+                alert("Please enter a 5-letter word.");
+                return;
+            }
+
+            if (attempts >= maxAttempts) {
+                return;
+            }
+
+            displayGuess(guess);
+            attempts++;
+
+            if (guess === secretWord) {
+                document.getElementById("message").innerText =
+                    "🎉 You guessed the word!";
+                disableGame();
+            } else if (attempts === maxAttempts) {
+                document.getElementById("message").innerText =
+                    "❌ Game over! The word was " + secretWord;
+                disableGame();
+            }
+
+            input.value = "";
+        }
+
+        function displayGuess(guess) {
+            const row = document.createElement("div");
+            row.className = "guess-row";
+
+            for (let i = 0; i < 5; i++) {
+                const box = document.createElement("div");
+                box.className = "letter";
+                box.innerText = guess[i];
+
+                if (guess[i] === secretWord[i]) {
+                    box.classList.add("correct");
+                } else if (secretWord.includes(guess[i])) {
+                    box.classList.add("present");
+                } else {
+                    box.classList.add("absent");
+                }
+
+                row.appendChild(box);
+            }
+
+            document.getElementById("guesses").appendChild(row);
+        }
+
+        function disableGame() {
+            document.getElementById("guessInput").disabled = true;
+        }
+        function resetGame() {
+             location.reload();
+        }
+        function showHint() {
+         const randomIndex = Math.floor(Math.random() * secretWord.length);
+        alert("Hint: The word contains the letter '" + secretWord[randomIndex] + "'");
+        }
+
+
+    </script>
+
+</body>
+</html>
